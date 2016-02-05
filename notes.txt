@@ -1,0 +1,3 @@
+tabix /path/to/file CAE10:start-end -h # Navigate in index data
+
+sed '/^#/d' /path/to/file > output.vcf # Remove headers from vcf file and save it
