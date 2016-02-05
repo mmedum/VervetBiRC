@@ -50,7 +50,7 @@ def setup_poly_file(out_file):
 
 
 def main():
-    """Convert vcf file to bed file"""
+    """Create bed file and a poly file from vcf"""
     parser = ArgumentParser(description="Argument parser for vcf file location")
     parser.add_argument("-in", dest="input", required=True,
                         help="Vcf file location", metavar="FILE",
