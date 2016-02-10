@@ -1,6 +1,7 @@
 """Conversion from vcf file to bed file"""
 
 from os import path
+import gzip
 from csv import DictReader, DictWriter
 from argparse import ArgumentParser
 
@@ -48,7 +49,7 @@ def main():
 
     args = parser.parse_args()
 
-    with open(args.input) as vcf_file, open(args.bedout, "a") as bedout, open(args.vcfout, "a") as vcfout:
+    with gzip.open(args.input, "r") as vcf_file, open(args.bedout, "a") as bedout, open(args.vcfout, "a") as vcfout:
         # Copy original header to new cvf file,
         # save line count for creating DictReader
         fieldnames = []
