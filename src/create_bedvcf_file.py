@@ -61,29 +61,40 @@ def main():
                 break
 
         # Setup DictReader with start from column headers
-        reader = DictReader(vcf_file, fieldnames, delimiter="\t")
+        reader = DictReader(vcf_file, fieldnames=fieldnames, delimiter="\t")
         writer = DictWriter(vcfout, fieldnames=reader.fieldnames, extrasaction="raise", delimiter="\t")
 
         setup_bed_file(bedout)
 
         chrome_pass_string = "PASS"
+        chrome_current = ""
         start_position = ""
         for row in reader:
-            chrome_chrome = row["#CHROM"]
+            if chrome_current == "":
+                chrome_current = row["#CHROM"]
             chrome_filter = row["FILTER"]
             chrome_position = row["POS"]
             if chrome_filter == chrome_pass_string:
-                # Get the alt allele
+            # Get the alt allele
                 chrome_alt_allele = row["ALT"] 
                 if start_position == "":
                     # Logic setting the start position
                     start_position = chrome_position
                 if chrome_alt_allele != ".":
                     chrome_info = row["INFO"]
+                    if "AA=" in chrome_info:
+                        chrome_id = row["ID"]
+                        if len(chrome_id) > 1:
+                            chrome_id += ";"
+                        else:
+                            chrome_id = ""
+                        chrome_split_info = chrome_info.split(";")
+                        chrome_id += next(x for x in chrome_split_info if "AA=" in x)[3:]
+                        row["ID"] = chrome_id 
                     writer.writerow(row)
             elif start_position != "":
                 # Ouput to bed bed file
-                output_to_bedfile(chrome_chrome, start_position, chrome_position, bedout)
+                output_to_bedfile(chrome_current, start_position, chrome_position, bedout)
                 start_position = ""
 
 
