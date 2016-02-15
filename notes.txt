@@ -1,3 +1,8 @@
 tabix /path/to/file CAE10:start-end -h # Navigate in index data
 
 sed '/^#/d' /path/to/file > output.vcf # Remove headers from vcf file and save it
+
+# Compress and index
+bgzip -c file.vcf > file.vcf.gz
+
+tabix -p vcf file.vcf.gz
