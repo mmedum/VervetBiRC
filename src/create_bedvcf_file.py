@@ -49,7 +49,7 @@ def main():
 
     args = parser.parse_args()
 
-    with gzip.open(args.input, "r") as vcf_file, open(args.bedout, "a") as bedout, open(args.vcfout, "a") as vcfout:
+    with gzip.open(args.input, "r") as vcf_file, open(args.bedout, "w") as bedout, open(args.vcfout, "w") as vcfout:
         # Copy original header to new cvf file,
         # save line count for creating DictReader
         fieldnames = []
@@ -77,7 +77,7 @@ def main():
             chrome_position = row["POS"]
             if chrome_filter == chrome_pass_string:
             # Get the alt allele
-                chrome_alt_allele = row["ALT"] 
+                chrome_alt_allele = row["ALT"]
                 if start_position == "":
                     # Logic setting the start position
                     start_position = chrome_position
@@ -91,7 +91,7 @@ def main():
                             chrome_id = ""
                         chrome_split_info = chrome_info.split(";")
                         chrome_id += next(x for x in chrome_split_info if "AA=" in x)[3:]
-                        row["ID"] = chrome_id 
+                        row["ID"] = chrome_id
                     writer.writerow(row)
             elif start_position != "":
                 # Ouput to bed bed file
