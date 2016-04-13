@@ -28,7 +28,7 @@ def accumulate_gender(male, female, gender):
 
 def accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, genotype, gender):
     """Function for accumulating genotype"""
-    if gender == "m":
+    if gender == "m" and genotype == "0/0":
         zero_male_genotype += 1
     else:
         if genotype == "0/0":
@@ -57,7 +57,7 @@ def main():
         genotype = "-1/-1"
         for sample in samples:
             genotype = record.genotype(sample)["GT"]
-            if genotype == "0/0" or genotype == "0/1":
+            if genotype == "0/0" or genotype == "0/1" or genotype == "1/1":
                 match_male_female = re.search(r"[\w]*_(\w)_[\d]+", sample)
                 if match_male_female:
                     gender = match_male_female.group(1).lower()
