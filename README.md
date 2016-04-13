@@ -17,6 +17,6 @@ python src/change_vcf_headers.py -in path/to/input.vcf -out path/to/output.vcf
 ## To run the code for calculating probablity of zero in all slices ##
 
 ```python
-python src/probability_of_zero.py -in path/to/input -out path/to/out
+python src/probability_of_zero.py -in path/to/input -out path/to/out -s number
 ```
 
