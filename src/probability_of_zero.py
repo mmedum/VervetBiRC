@@ -17,9 +17,9 @@ def is_valid_file(parser, file):
         return file
 
 
-def accumulate_gender(male, female, gender):
+def accumulate_gender(male, female, gender, genotype):
     """Function for accumulating total he/she"""
-    if gender == "m":
+    if gender == "m" and (genotype == "0/0" or genotype == "1/1"):
         male += 1
     else:
         female += 1
