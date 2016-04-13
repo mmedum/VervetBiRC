@@ -29,8 +29,7 @@ def accumulate_gender(male, female, gender):
 def accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, genotype, gender):
     """Function for accumulating genotype"""
     if gender == "m":
-        if genotype == "0/0" or genotype == "0/1":
-            zero_male_genotype += 1
+        zero_male_genotype += 1
     else:
         if genotype == "0/0":
             zero_zero_female_genotype += 1
@@ -57,18 +56,19 @@ def main():
         gender = "none"
         genotype = "-1/-1"
         for sample in samples:
-            match_male_female = re.search(r"[\w]*_(\w)_[\d]+", sample)
-            if match_male_female:
-                gender = match_male_female.group(1).lower()
-                male, female = accumulate_gender(male, female, gender)
-            else:
-                print("Not possible to find gender, aborting program")
-                sys.exit(1)
             genotype = record.genotype(sample)["GT"]
-            zero_male_genotype, zero_zero_female_genotype, zero_one_female_genotype = accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, genotype, gender)
-            print("For", sample, "Genotype:", genotype)
+            if genotype == "0/0" or genotype == "0/1":
+                match_male_female = re.search(r"[\w]*_(\w)_[\d]+", sample)
+                if match_male_female:
+                    gender = match_male_female.group(1).lower()
+                    male, female = accumulate_gender(male, female, gender)
+                else:
+                    print("Not possible to find gender, aborting program")
+                    sys.exit(1)
+                zero_male_genotype, zero_zero_female_genotype, zero_one_female_genotype = accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, genotype, gender)
+                print("For", sample, "Genotype:", genotype)
     numerator = zero_male_genotype + zero_one_female_genotype + (2 * zero_zero_female_genotype)
-    denominator = male + female
+    denominator = male + (2 * female)
     # (0/0 male GT + 0/1 female GT + (2 * 0/0 female GT)) / male + female
     print("Probability:", (numerator/denominator))
     print(male, female)
