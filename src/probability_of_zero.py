@@ -19,7 +19,7 @@ def is_valid_file(parser, file):
 
 def accumulate_gender(male, female, gender, genotype):
     """Function for accumulating total he/she"""
-    if gender == "m" and (genotype == "0/0" or genotype == "1/1"):
+    if gender == "m":
         male += 1
     else:
         female += 1
@@ -57,14 +57,14 @@ def main():
         genotype = "-1/-1"
         for sample in samples:
             genotype = record.genotype(sample)["GT"]
-            if genotype == "0/0" or genotype == "0/1" or genotype == "1/1":
-                match_male_female = re.search(r"[\w]*_(\w)_[\d]+", sample)
-                if match_male_female:
-                    gender = match_male_female.group(1).lower()
-                    male, female = accumulate_gender(male, female, gender, genotype)
-                else:
-                    print("Not possible to find gender, aborting program")
-                    sys.exit(1)
+            match_male_female = re.search(r"[\w]*_(\w)_[\d]+", sample)
+            if match_male_female:
+                gender = match_male_female.group(1).lower()
+                male, female = accumulate_gender(male, female, gender, genotype)
+            else:
+                print("Not possible to find gender, aborting program")
+                sys.exit(1)
+            if genotype == "0/0" or (genotype == "0/1" and gender != "m") or genotype == "1/1":
                 zero_male_genotype, zero_zero_female_genotype, zero_one_female_genotype = accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, genotype, gender)
                 print("For", sample, "Genotype:", genotype)
     numerator = zero_male_genotype + zero_one_female_genotype + (2 * zero_zero_female_genotype)
