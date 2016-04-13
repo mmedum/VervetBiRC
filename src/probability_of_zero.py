@@ -61,7 +61,7 @@ def main():
                 match_male_female = re.search(r"[\w]*_(\w)_[\d]+", sample)
                 if match_male_female:
                     gender = match_male_female.group(1).lower()
-                    male, female = accumulate_gender(male, female, gender)
+                    male, female = accumulate_gender(male, female, gender, genotype)
                 else:
                     print("Not possible to find gender, aborting program")
                     sys.exit(1)
