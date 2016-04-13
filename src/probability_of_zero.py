@@ -17,12 +17,14 @@ def is_valid_file(parser, file):
         return file
 
 
-def accumulate_gender(male, female, gender):
+def accumulate_gender(male, female, gender, genotype):
     """Function for accumulating total he/she"""
     if gender == "m":
-        male += 1
-    else:
-        female += 1
+        if genotype == "0/0" or genotype == "1/1":
+            male += 1
+    elif gender == "f":
+        if genotype == "0/0" or genotype == "0/1" or genotype == "1/1":
+            female += 1
     return male, female
 
 
@@ -30,7 +32,7 @@ def accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero
     """Function for accumulating genotype"""
     if gender == "m" and genotype == "0/0":
         zero_male_genotype += 1
-    else:
+    elif gender == "f":
         if genotype == "0/0":
             zero_zero_female_genotype += 1
         elif genotype == "0/1":
@@ -50,28 +52,29 @@ def main():
     # Hold all the sample information
     samples = vcf_reader.samples
 
-    male = female = zero_male_genotype = zero_one_female_genotype = zero_zero_female_genotype = 0
+    male = female = 0
+    zero_male_genotype = 0
+    zero_one_female_genotype = zero_zero_female_genotype = 0
 
     for record in vcf_reader:
         gender = "none"
         genotype = "-1/-1"
         for sample in samples:
-            genotype = record.genotype(sample)["GT"]
+            genotype = record.genotype(sample)["GT"].lower().strip()
             match_male_female = re.search(r"[\w]*_(\w)_[\d]+", sample)
             if match_male_female:
-                gender = match_male_female.group(1).lower()
+                gender = match_male_female.group(1).lower().strip()
             else:
                 print("Not possible to find gender, aborting program")
                 sys.exit(1)
-            if genotype == "0/0" or (genotype == "0/1" and gender != "m") or genotype == "1/1":
-                male, female = accumulate_gender(male, female, gender)
-                zero_male_genotype, zero_zero_female_genotype, zero_one_female_genotype = accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, genotype, gender)
-                print("For", sample, "Genotype:", genotype)
+            male, female = accumulate_gender(male, female, gender, genotype)
+            zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype = accumulate_genotypes(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, genotype, gender)
+
+    print(zero_male_genotype, zero_one_female_genotype, zero_zero_female_genotype, male, female)
     numerator = zero_male_genotype + zero_one_female_genotype + (2 * zero_zero_female_genotype)
     denominator = male + (2 * female)
     # (0/0 male GT + 0/1 female GT + (2 * 0/0 female GT)) / male + female
     print("Probability:", (numerator/denominator))
-    print(male, female)
     print("Done")
 
 
