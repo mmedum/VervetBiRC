@@ -68,9 +68,9 @@ class VariableHolder(object):
 
     def probability_calculation(self):
         """Perform Probability calculation based on own data"""
-#        print(self.male, self.female, self.zero_male_genotype, self.zero_one_female_genotype, self.zero_zero_female_genotype)
         numerator = self.zero_male_genotype + self.zero_one_female_genotype + (2 * self.zero_zero_female_genotype)
         denominator = self.male + (2 * self.female)
-#        print(self.male, self.female, self.zero_male_genotype, self.zero_one_female_genotype, self.zero_zero_female_genotype)
+        if numerator == 0 and denominator == 0:
+            return str(0)
         return str(numerator/denominator)
 
