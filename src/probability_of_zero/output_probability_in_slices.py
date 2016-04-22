@@ -137,7 +137,7 @@ def main():
                 accumulate_gender(gender, genotype, dict_population[0])
                 accumulate_genotypes(gender, genotype, dict_population[0])
             temp_end_pos = record.POS + 1
-        dict_population["chromEnd"] = temp_end_pos
+        dict_population["chromEnd"] = str(temp_end_pos)
         output_dict_to_file(out, dict_population)
 
     print("Done")
