@@ -115,6 +115,7 @@ def main():
                 output_dict_to_file(out, dict_population)
                 reset_dict_population(dict_population)
                 dict_population["chromStart"] = str(end_position)
+                start_pos = end_position
             gender = "none"
             population_group = -1
             genotype = "-1/-1"
