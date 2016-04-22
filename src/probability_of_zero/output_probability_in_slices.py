@@ -103,6 +103,7 @@ def main():
         window_slice = args.slice
         should_set_start_pos = True
         start_pos = -1
+        temp_end_pos = -1
 
         for record in vcf_reader:
             if should_set_start_pos:
@@ -135,6 +136,8 @@ def main():
                 # We need to do the total too
                 accumulate_gender(gender, genotype, dict_population[0])
                 accumulate_genotypes(gender, genotype, dict_population[0])
+            temp_end_pos = record.POS + 1
+        dict_population["chromEnd"] = temp_end_pos
         output_dict_to_file(out, dict_population)
 
     print("Done")
