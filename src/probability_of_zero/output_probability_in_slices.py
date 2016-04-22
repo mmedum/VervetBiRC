@@ -109,7 +109,7 @@ def main():
                 start_pos = record.POS
                 dict_population["chromStart"] = str(start_pos)
                 should_set_start_pos = False
-            if (record.POS - start_pos) >= window_slice:
+            elif (record.POS - start_pos) >= window_slice:
                 end_position = record.POS
                 dict_population["chromEnd"] = str(end_position)
                 output_dict_to_file(out, dict_population)
